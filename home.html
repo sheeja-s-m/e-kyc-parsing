@@ -1,0 +1,65 @@
+<html>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<style type="text/css"> 
+    #filecontents { 
+         border:double; 
+      overflow-y:scroll; 
+      height:400px; 
+    } 
+</style>
+<body> 
+  <div class="container">
+    <div>
+      <h2> e-KYC based Data Registration</h2>
+    </div>
+    <input type="file" id="file-input" />
+    <h3>Contents of the file:</h3>
+    <pre id="file-content"></pre>
+    <div id="Name">Name: </div>
+    <div id="Gender">Gender: </div>
+    <div id="Dob">DOB</div>
+    <div id="Address">Address: </div>
+</div>
+<script type="text/javascript">
+
+function readSingleFile(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    displayContents(contents);
+  };
+  reader.readAsText(file);
+}
+
+function displayContents(contents) {
+  var element = document.getElementById('file-content');
+  // element.textContent = contents;
+  parse(contents);
+}
+
+document.getElementById('file-input')
+  .addEventListener('change', readSingleFile, false);
+  
+var xmlDoc;
+function parse(content)
+{
+  //Create a parser
+  var parser = new DOMParser();
+  xmlDoc = parser.parseFromString(content,"text/xml");
+  //Parse!
+  x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
+
+  document.getElementById("Dob").innerText = "DOB: "+ x[0].getAttribute('dob');
+  document.getElementById("Gender").innerText = "Gender: " + x[0].getAttribute('gender');
+  document.getElementById("Name").innerText = "Name: " + x[0].getAttribute('name');
+  document.getElementById("Address").innerText = "Address: " + x[1].getAttribute('careof') + x[1].getAttribute('house') + x[1].getAttribute('loc')+ x[1].getAttribute('landmark')+ x[1].getAttribute('street')+ x[1].getAttribute('subdist')+ x[1].getAttribute('dist')+ x[1].getAttribute('country');
+}
+</script>
+</body>
+</html>
