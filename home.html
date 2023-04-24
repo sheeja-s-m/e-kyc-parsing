@@ -8,19 +8,43 @@
       overflow-y:scroll; 
       height:400px; 
     } 
-</style>
+
+  legend {
+      font-size:  1.3em;
+      font-weight:  bold;
+      position:  relative;
+      top:  -.4em;
+  }
+  
+      </style>
 <body> 
   <div class="container">
     <div>
-      <h2> e-KYC based Data Registration</h2>
+      <h2 class="p-3 text-center"> e-KYC based Data Registration</h2>
     </div>
-    <input type="file" id="file-input" />
-    <h3>Contents of the file:</h3>
-    <pre id="file-content"></pre>
-    <div id="Name">Name: </div>
-    <div id="Gender">Gender: </div>
-    <div id="Dob">DOB</div>
-    <div id="Address">Address: </div>
+    <label for="file-input" class="form-label">Select the XML file to parse</label>
+    <input type="file" id="file-input" class="p-1"/>
+    <form id = "xmldataform" class="pt-3">
+      <fieldset disabled>
+        <legend>Parsed contents of XML</legend>
+        <div class="mb-3">
+          <label for="FormNameInput" class="form-label">Name</label>
+          <input type="text" id="FormNameInput" class="form-control" >
+        </div>
+        <div class="mb-3">
+          <label for="FormGenderInput" class="form-label">Gender</label>
+          <input type="text" id="FormGenderInput" class="form-control" >
+        </div>
+        <div class="mb-3">
+          <label for="FormDOBInput" class="form-label">Name</label>
+          <input type="text" id="FormDOBInput" class="form-control" >
+        </div>
+        <div class="mb-3">
+          <label for="FormAddressInput" class="form-label">Address</label>
+          <textarea class="form-control" id="FormAddressInput" rows="2"></textarea>
+        </div>      
+      </fieldset>
+    </form>
 </div>
 <script type="text/javascript">
 
@@ -55,10 +79,39 @@ function parse(content)
   //Parse!
   x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
 
-  document.getElementById("Dob").innerText = "DOB: "+ x[0].getAttribute('dob');
-  document.getElementById("Gender").innerText = "Gender: " + x[0].getAttribute('gender');
-  document.getElementById("Name").innerText = "Name: " + x[0].getAttribute('name');
-  document.getElementById("Address").innerText = "Address: " + x[1].getAttribute('careof') + ", " + x[1].getAttribute('house') + ", " + x[1].getAttribute('loc')+ ", " + x[1].getAttribute('landmark')+",\n            " +  x[1].getAttribute('street')+", " +  x[1].getAttribute('subdist')+ ", " + x[1].getAttribute('dist')+", " +  x[1].getAttribute('country');
+  formobj = document.forms['xmldataform'];
+  formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
+  formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
+  formobj.elements["FormNameInput"].value = x[0].getAttribute('name');
+
+  var addr = "Address: "
+  if (x[1].hasAttribute('careof')){
+     addr = addr+ x[1].getAttribute('careof')+", ";
+  }
+  if (x[1].hasAttribute('house')){
+     addr = addr+ x[1].getAttribute('house')+", ";
+  }
+  if (x[1].hasAttribute('loc')){
+     addr = addr+ x[1].getAttribute('loc')+", ";
+  }
+  if (x[1].hasAttribute('landmark')){
+     addr = addr+ x[1].getAttribute('landmark')+", ";
+  }
+  addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
+  if (x[1].hasAttribute('street')){
+     addr = addr+ x[1].getAttribute('street')+", ";
+  }
+  if (x[1].hasAttribute('subdist')){
+     addr = addr+ x[1].getAttribute('subdist')+", ";
+  }
+  if (x[1].hasAttribute('dist')){
+     addr = addr+ x[1].getAttribute('dist')+", ";
+  }
+  if (x[1].hasAttribute('country')){
+     addr = addr+ x[1].getAttribute('country')+", ";
+  }
+  // removing the last comma and space
+  formobj.elements["FormAddressInput"].value = addr.slice(0,-2);
 }
 </script>
 </body>
