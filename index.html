@@ -97,6 +97,7 @@ function parse(content)
   if (x[1].hasAttribute('landmark')){
      addr = addr+ x[1].getAttribute('landmark')+", ";
   }
+  // to print in next line and to adjust the text to appear after the label.
   addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
   if (x[1].hasAttribute('street')){
      addr = addr+ x[1].getAttribute('street')+", ";
