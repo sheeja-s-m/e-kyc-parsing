@@ -50,73 +50,81 @@
     </form>
 </div>
 <script type="text/javascript">
-
-function readSingleFile(e) {
-  var file = e.target.files[0];
-  if (!file) {
-    return;
+  function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var contents = e.target.result;
+      parse(contents);
+    };
+    reader.readAsText(file);
   }
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var contents = e.target.result;
-    displayContents(contents);
-  };
-  reader.readAsText(file);
-}
-
-function displayContents(contents) {
-  var element = document.getElementById('file-content');
-  // element.textContent = contents;
-  parse(contents);
-}
-
-document.getElementById('file-input')
-  .addEventListener('change', readSingleFile, false);
+  //listener for file upload event
+  document.getElementById('file-input')
+    .addEventListener('change', readSingleFile, false);
   
-var xmlDoc;
-function parse(content)
-{
-  //Create a parser
-  var parser = new DOMParser();
-  xmlDoc = parser.parseFromString(content,"text/xml");
-  //Parse!
-  x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
+  function clearFormFields(){
+    var formobj = document.forms['xmldataform'];
+    formobj.elements["FormGenderInput"].value = "";
+    formobj.elements["FormDOBInput"].value = "";
+    formobj.elements["FormNameInput"].value = "";
+    formobj.elements["FormAddressInput"].value = "";
+  }
 
-  formobj = document.forms['xmldataform'];
-  formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
-  formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
-  formobj.elements["FormNameInput"].value = x[0].getAttribute('name');
+  function parse(content)
+  {
+    var xmlDoc;
+    //Create a parser
+    var parser = new DOMParser();
+    xmlDoc = parser.parseFromString(content,"text/xml");
+   
+    // clear fields from form
+    clearFormFields();
 
-  var addr = "Address: "
-  if (x[1].hasAttribute('careof')){
-     addr = addr+ x[1].getAttribute('careof')+", ";
-  }
-  if (x[1].hasAttribute('house')){
-     addr = addr+ x[1].getAttribute('house')+", ";
-  }
-  if (x[1].hasAttribute('loc')){
-     addr = addr+ x[1].getAttribute('loc')+", ";
-  }
-  if (x[1].hasAttribute('landmark')){
-     addr = addr+ x[1].getAttribute('landmark')+", ";
-  }
-  // to print in next line and to adjust the text to appear after the label.
-  addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
-  if (x[1].hasAttribute('street')){
-     addr = addr+ x[1].getAttribute('street')+", ";
-  }
-  if (x[1].hasAttribute('subdist')){
-     addr = addr+ x[1].getAttribute('subdist')+", ";
-  }
-  if (x[1].hasAttribute('dist')){
-     addr = addr+ x[1].getAttribute('dist')+", ";
-  }
-  if (x[1].hasAttribute('country')){
-     addr = addr+ x[1].getAttribute('country')+", ";
-  }
-  // removing the last comma and space
-  formobj.elements["FormAddressInput"].value = addr.slice(0,-2);
-}
+    //Parse  if the node exists
+    if (xmlDoc.getElementsByTagName("UidData").length > 0)
+    {
+      x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
+
+      var formobj = document.forms['xmldataform'];
+      formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
+      formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
+      formobj.elements["FormNameInput"].value = x[0].getAttribute('name');
+
+      var addr = "Address: "
+      if (x[1].hasAttribute('careof')){
+        addr = addr+ x[1].getAttribute('careof')+", ";
+      }
+      if (x[1].hasAttribute('house')){
+        addr = addr+ x[1].getAttribute('house')+", ";
+      }
+      if (x[1].hasAttribute('loc')){
+        addr = addr+ x[1].getAttribute('loc')+", ";
+      }
+      if (x[1].hasAttribute('landmark')){
+        addr = addr+ x[1].getAttribute('landmark')+", ";
+      }
+      // to print in next line and to adjust the text to appear after the label.
+      addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
+      if (x[1].hasAttribute('street')){
+        addr = addr+ x[1].getAttribute('street')+", ";
+      }
+      if (x[1].hasAttribute('subdist')){
+        addr = addr+ x[1].getAttribute('subdist')+", ";
+      }
+      if (x[1].hasAttribute('dist')){
+        addr = addr+ x[1].getAttribute('dist')+", ";
+      }
+      if (x[1].hasAttribute('country')){
+        addr = addr+ x[1].getAttribute('country')+", ";
+      }
+      // removing the last comma and space
+      formobj.elements["FormAddressInput"].value = addr.slice(0,-2);
+    }
+  } 
 </script>
 </body>
 </html>
