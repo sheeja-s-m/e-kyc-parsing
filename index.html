@@ -1,129 +1,135 @@
-<html>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-<style type="text/css"> 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <title>Offline e-KYC</title>
+        <meta content="text/html; charset=utf-8" />
+  </head>  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style type="text/css"> 
     #filecontents { 
-         border:double; 
+          border:double; 
       overflow-y:scroll; 
       height:400px; 
     } 
 
-  legend {
-      font-size:  1.3em;
-      font-weight:  bold;
-      position:  relative;
-      top:  -.4em;
-  }
-  
-      </style>
-<body background="blue-abstract-gradient-wave.jpg"> 
-  <div class="container">
-    <div>
-      <h2 class="p-3 text-center"> e-KYC based User Registration</h2>
-    </div>
-    <div>
-      <h5> Use the <a href="https://myaadhaar.uidai.gov.in/offline-ekyc">link</a> to generate offline eKYC data </h5>
-    </div>
-    <label for="file-input" class="form-label pt-4">Upload the e-KYC XML file:</label>
-    <input type="file" id="file-input" class="p-1"/>
-    <form id = "xmldataform" class="pt-3">
-      <fieldset disabled>
-        <legend>User Registration Details</legend>
-        <div class="mb-3">
-          <label for="FormNameInput" class="form-label">Name</label>
-          <input type="text" id="FormNameInput" class="form-control" >
-        </div>
-        <div class="mb-3">
-          <label for="FormGenderInput" class="form-label">Gender</label>
-          <input type="text" id="FormGenderInput" class="form-control" >
-        </div>
-        <div class="mb-3">
-          <label for="FormDOBInput" class="form-label">Date of Birth</label>
-          <input type="text" id="FormDOBInput" class="form-control" >
-        </div>
-        <div class="mb-3">
-          <label for="FormAddressInput" class="form-label">Address</label>
-          <textarea class="form-control" id="FormAddressInput" rows="2"></textarea>
-        </div>      
-      </fieldset>
-    </form>
-</div>
-<script type="text/javascript">
-  function readSingleFile(e) {
-    var file = e.target.files[0];
-    if (!file) {
-      return;
+    legend {
+        font-size:  1.3em;
+        font-weight:  bold;
+        position:  relative;
+        top:  -.4em;
     }
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var contents = e.target.result;
-      parse(contents);
-    };
-    reader.readAsText(file);
-  }
-  //listener for file upload event
-  document.getElementById('file-input')
-    .addEventListener('change', readSingleFile, false);
-  
-  function clearFormFields(){
-    var formobj = document.forms['xmldataform'];
-    formobj.elements["FormGenderInput"].value = "";
-    formobj.elements["FormDOBInput"].value = "";
-    formobj.elements["FormNameInput"].value = "";
-    formobj.elements["FormAddressInput"].value = "";
-  }
-
-  function parse(content)
-  {
-    var xmlDoc;
-    //Create a parser
-    var parser = new DOMParser();
-    xmlDoc = parser.parseFromString(content,"text/xml");
-   
-    // clear fields from form
-    clearFormFields();
-
-    //Parse  if the node exists
-    if (xmlDoc.getElementsByTagName("UidData").length > 0)
-    {
-      x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
-      var formobj = document.forms['xmldataform'];
-      formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
-      formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
-      formobj.elements["FormNameInput"].value = x[0].getAttribute('name');
-
-      var addr = "Address: "
-      if (x[1].hasAttribute('careof')){
-        addr = addr+ x[1].getAttribute('careof')+", ";
-      }
-      if (x[1].hasAttribute('house')){
-        addr = addr+ x[1].getAttribute('house')+", ";
-      }
-      if (x[1].hasAttribute('loc')){
-        addr = addr+ x[1].getAttribute('loc')+", ";
-      }
-      if (x[1].hasAttribute('landmark')){
-        addr = addr+ x[1].getAttribute('landmark')+", ";
-      }
-      // to print in next line and to adjust the text to appear after the label.
-      addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
-      if (x[1].hasAttribute('street')){
-        addr = addr+ x[1].getAttribute('street')+", ";
-      }
-      if (x[1].hasAttribute('subdist')){
-        addr = addr+ x[1].getAttribute('subdist')+", ";
-      }
-      if (x[1].hasAttribute('dist')){
-        addr = addr+ x[1].getAttribute('dist')+", ";
-      }
-      if (x[1].hasAttribute('country')){
-        addr = addr+ x[1].getAttribute('country')+", ";
-      }
-      // removing the last comma and space
-      formobj.elements["FormAddressInput"].value = addr.slice(0,-2);
+    
+    body {
+      background-image: url('blue-abstract-gradient-wave.jpg');
     }
-  } 
-</script>
-</body>
+  </style>
+  <body>
+    <div class="container">
+      <div>
+        <h2 class="p-3 text-center"> e-KYC based User Registration</h2>
+      </div>
+      <div>
+        <h5> Use the <a href="https://myaadhaar.uidai.gov.in/offline-ekyc">link</a> to generate offline eKYC data </h5>
+      </div>
+      <label for="file-input" class="form-label pt-4">Upload the e-KYC XML file:</label>
+      <input type="file" id="file-input" class="p-1"/>
+      <form id = "xmldataform" class="pt-3">
+        <fieldset disabled>
+          <legend>User Registration Details</legend>
+          <div class="mb-3">
+            <label for="FormNameInput" class="form-label">Name</label>
+            <input type="text" id="FormNameInput" class="form-control" >
+          </div>
+          <div class="mb-3">
+            <label for="FormGenderInput" class="form-label">Gender</label>
+            <input type="text" id="FormGenderInput" class="form-control" >
+          </div>
+          <div class="mb-3">
+            <label for="FormDOBInput" class="form-label">Date of Birth</label>
+            <input type="text" id="FormDOBInput" class="form-control" >
+          </div>
+          <div class="mb-3">
+            <label for="FormAddressInput" class="form-label">Address</label>
+            <textarea class="form-control" id="FormAddressInput" rows="2"></textarea>
+          </div>      
+        </fieldset>
+      </form>
+    </div>
+    <script type="text/javascript">
+      function readSingleFile(e) {
+        var file = e.target.files[0];
+        if (!file) {
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var contents = e.target.result;
+          parse(contents);
+        };
+        reader.readAsText(file);
+      }
+      //listener for file upload event
+      document.getElementById('file-input')
+        .addEventListener('change', readSingleFile, false);
+      
+      function clearFormFields(){
+        var formobj = document.forms['xmldataform'];
+        formobj.elements["FormGenderInput"].value = "";
+        formobj.elements["FormDOBInput"].value = "";
+        formobj.elements["FormNameInput"].value = "";
+        formobj.elements["FormAddressInput"].value = "";
+      }
+
+      function parse(content)
+      {
+        var xmlDoc;
+        //Create a parser
+        var parser = new DOMParser();
+        xmlDoc = parser.parseFromString(content,"text/xml");
+      
+        // clear fields from form
+        clearFormFields();
+
+        //Parse  if the node exists
+        if (xmlDoc.getElementsByTagName("UidData").length > 0)
+        {
+          x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
+          var formobj = document.forms['xmldataform'];
+          formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
+          formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
+          formobj.elements["FormNameInput"].value = x[0].getAttribute('name');
+
+          var addr = "Address: "
+          if (x[1].hasAttribute('careof')){
+            addr = addr+ x[1].getAttribute('careof')+", ";
+          }
+          if (x[1].hasAttribute('house')){
+            addr = addr+ x[1].getAttribute('house')+", ";
+          }
+          if (x[1].hasAttribute('loc')){
+            addr = addr+ x[1].getAttribute('loc')+", ";
+          }
+          if (x[1].hasAttribute('landmark')){
+            addr = addr+ x[1].getAttribute('landmark')+", ";
+          }
+          // to print in next line and to adjust the text to appear after the label.
+          addr = addr + "\n\u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0 \u00A0";
+          if (x[1].hasAttribute('street')){
+            addr = addr+ x[1].getAttribute('street')+", ";
+          }
+          if (x[1].hasAttribute('subdist')){
+            addr = addr+ x[1].getAttribute('subdist')+", ";
+          }
+          if (x[1].hasAttribute('dist')){
+            addr = addr+ x[1].getAttribute('dist')+", ";
+          }
+          if (x[1].hasAttribute('country')){
+            addr = addr+ x[1].getAttribute('country')+", ";
+          }
+          // removing the last comma and space
+          formobj.elements["FormAddressInput"].value = addr.slice(0,-2);
+        }
+      } 
+    </script>
+  </body>
 </html>
