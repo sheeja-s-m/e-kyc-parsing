@@ -88,7 +88,6 @@
     if (xmlDoc.getElementsByTagName("UidData").length > 0)
     {
       x = xmlDoc.getElementsByTagName("UidData")[0].childNodes;
-
       var formobj = document.forms['xmldataform'];
       formobj.elements["FormGenderInput"].value = x[0].getAttribute('gender');
       formobj.elements["FormDOBInput"].value = x[0].getAttribute('dob');
